@@ -41,7 +41,12 @@ class product extends simplePHP {
 	* @return array
 	**/
 	public function GET() {
-		$data = $this->model->getData('products');
+		#load received filters
+		$filters = $this->core->loadFilters('products',$_REQUEST);
+
+		#load data from DB
+		$data = $this->model->getData('products','*',$filters);
+
 		return $data;
 	}
 
@@ -51,10 +56,13 @@ class product extends simplePHP {
 	* @return array
 	**/
 	public function POST() {
-		$data['name'] = $_POST['name'];
 		
-
+		#validate data
+		$data = $this->core->validateData('products',$_POST);
+		
+		#insert data
 		$return = $this->model->addData('products',$data);
+
 		return $return;
 	}
 
